@@ -72,3 +72,4 @@ The API runs at `http://localhost:5000`.
 ```
 
 Keep API keys in `server/.env`; never commit them to GitHub.
+# ZeroG-Ignis
