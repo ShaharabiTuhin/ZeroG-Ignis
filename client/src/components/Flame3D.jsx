@@ -1,32 +1,36 @@
-import { useRef } from "react";
+import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 
 export default function Flame3D({ isMicrogravity }) {
   const meshRef = useRef();
 
-  useFrame((state) => {
-    if (!meshRef.current) return;
-
-    const pulse = Math.sin(state.clock.elapsedTime * 2.4) * 0.06;
-    meshRef.current.scale.x = 1 + pulse;
-    meshRef.current.scale.y =
-      1 + Math.cos(state.clock.elapsedTime * 2.4) * 0.05;
-    meshRef.current.rotation.y += 0.003;
+  // Basic animation loop to simulate flickering/pulsing
+  useFrame((state, delta) => {
+    if (meshRef.current) {
+      meshRef.current.scale.x =
+        1 + Math.sin(state.clock.elapsedTime * 2) * 0.05;
+      meshRef.current.scale.y =
+        1 + Math.cos(state.clock.elapsedTime * 2) * 0.05;
+    }
   });
 
   return (
     <mesh ref={meshRef}>
+      {/* If in microgravity, the flame is a perfect sphere. On Earth, it would be a teardrop (cone/cylinder mix) */}
       {isMicrogravity ? (
-        <sphereGeometry args={[1, 48, 48]} />
+        <sphereGeometry args={[1, 32, 32]} />
       ) : (
-        <coneGeometry args={[1, 2, 48]} />
+        <coneGeometry args={[1, 2, 32]} />
       )}
+
       <meshStandardMaterial
-        color={isMicrogravity ? "#67d6ff" : "#ffb547"}
-        emissive={isMicrogravity ? "#176184" : "#9b340f"}
-        emissiveIntensity={2.2}
-        roughness={0.35}
+        color={isMicrogravity ? "#44aaff" : "#ffaa00"} // Microgravity flames often burn blue/dimmer
+        emissive={isMicrogravity ? "#2255aa" : "#ff5500"}
+        emissiveIntensity={2}
+        wireframe={false}
       />
     </mesh>
   );
 }
+
+
