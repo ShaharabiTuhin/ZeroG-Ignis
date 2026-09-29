@@ -16,7 +16,58 @@ const datasetDetails = {
     samples: "76 experiments",
     signal: "Flammability margin",
   },
+  BOTH: {
+    label: "ACME + FLEX evidence",
+    detail: "Combined combustion research",
+    samples: "204 experiments",
+    signal: "Cross-dataset comparison",
+  },
 };
+
+function formatInlineMarkdown(text) {
+  return text.split(/(\*\*[^*]+\*\*)/g).map((part, index) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={index}>{part.slice(2, -2)}</strong>;
+    }
+    return part;
+  });
+}
+
+function AnalysisText({ text }) {
+  const blocks = text.split(/\n\s*\n/).filter(Boolean);
+
+  return (
+    <div className="analysis-content">
+      {blocks.map((block, blockIndex) => {
+        const lines = block.split("\n").filter(Boolean);
+        const isList = lines.every((line) => line.trim().startsWith("- "));
+
+        if (isList) {
+          return (
+            <ul key={blockIndex}>
+              {lines.map((line, lineIndex) => (
+                <li key={lineIndex}>
+                  {formatInlineMarkdown(line.trim().slice(2))}
+                </li>
+              ))}
+            </ul>
+          );
+        }
+
+        return (
+          <p key={blockIndex}>
+            {lines.map((line, lineIndex) => (
+              <span key={lineIndex}>
+                {lineIndex > 0 && <br />}
+                {formatInlineMarkdown(line)}
+              </span>
+            ))}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
 
 export default function OperationsDashboard() {
   const [isMicrogravity, setIsMicrogravity] = useState(true);
@@ -26,8 +77,17 @@ export default function OperationsDashboard() {
     "Select a dataset and ask a safety question to generate a mission-ready interpretation.",
   );
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [activeSection, setActiveSection] = useState("overview");
 
   const dataset = datasetDetails[activeDataset];
+
+  const navigateToSection = (sectionId) => {
+    setActiveSection(sectionId);
+    document.getElementById(sectionId)?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
 
   const handleAnalyze = async (event) => {
     event.preventDefault();
@@ -44,7 +104,11 @@ export default function OperationsDashboard() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ query, dataset: activeDataset }),
+          body: JSON.stringify({
+            query,
+            dataset: activeDataset,
+            isMicrogravity,
+          }),
         },
       );
 
@@ -75,13 +139,42 @@ export default function OperationsDashboard() {
         </div>
 
         <nav className="side-nav" aria-label="Dashboard sections">
-          <button className="side-nav-item is-current" type="button">
+          <button
+            className={
+              activeSection === "overview"
+                ? "side-nav-item is-current"
+                : "side-nav-item"
+            }
+            type="button"
+            aria-current={activeSection === "overview" ? "page" : undefined}
+            onClick={() => navigateToSection("overview")}
+          >
             <span className="nav-index">01</span> Safety overview
           </button>
-          <button className="side-nav-item" type="button">
+          <button
+            className={
+              activeSection === "flame-model"
+                ? "side-nav-item is-current"
+                : "side-nav-item"
+            }
+            type="button"
+            aria-current={activeSection === "flame-model" ? "page" : undefined}
+            onClick={() => navigateToSection("flame-model")}
+          >
             <span className="nav-index">02</span> Flame model
           </button>
-          <button className="side-nav-item" type="button">
+          <button
+            className={
+              activeSection === "evidence-library"
+                ? "side-nav-item is-current"
+                : "side-nav-item"
+            }
+            type="button"
+            aria-current={
+              activeSection === "evidence-library" ? "page" : undefined
+            }
+            onClick={() => navigateToSection("evidence-library")}
+          >
             <span className="nav-index">03</span> Evidence library
           </button>
         </nav>
@@ -131,7 +224,7 @@ export default function OperationsDashboard() {
           </div>
         </header>
 
-        <section className="dashboard-intro">
+        <section className="dashboard-intro" id="overview">
           <div>
             <p className="section-kicker">Fire safety intelligence</p>
             <h2>
@@ -209,7 +302,7 @@ export default function OperationsDashboard() {
           </article>
         </section>
 
-        <section className="primary-grid">
+        <section className="primary-grid" id="flame-model">
           <article className="panel simulation-panel">
             <div className="panel-topline">
               <div>
@@ -310,7 +403,7 @@ export default function OperationsDashboard() {
           </article>
         </section>
 
-        <section className="secondary-grid">
+        <section className="secondary-grid" id="evidence-library">
           <article className="panel evidence-panel">
             <div className="panel-topline">
               <div>
@@ -339,7 +432,11 @@ export default function OperationsDashboard() {
             </div>
             <div className="dataset-summary">
               <div className="dataset-icon">
-                {activeDataset === "ACME" ? "AC" : "FX"}
+                {activeDataset === "ACME"
+                  ? "AC"
+                  : activeDataset === "FLEX"
+                    ? "FX"
+                    : "A+F"}
               </div>
               <div>
                 <strong>{dataset.label}</strong>
@@ -382,7 +479,7 @@ export default function OperationsDashboard() {
             </form>
             <div className="analysis-result">
               <span>Safety interpretation</span>
-              <p>{analysis}</p>
+              <AnalysisText text={analysis} />
             </div>
           </article>
         </section>

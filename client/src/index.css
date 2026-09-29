@@ -1236,11 +1236,24 @@ h2 em {
   border-left: 2px solid var(--cyan);
   background: #14272e;
 }
-.analysis-result p {
+.analysis-content p,
+.analysis-content ul {
   margin: 0.45rem 0 0;
   color: #b9ced1;
   font-size: 0.7rem;
   line-height: 1.5;
+}
+.analysis-content p + p,
+.analysis-content ul + p,
+.analysis-content p + ul {
+  margin-top: 0.7rem;
+}
+.analysis-content strong {
+  color: #effcff;
+  font-weight: 600;
+}
+.analysis-content ul {
+  padding-left: 1rem;
 }
 
 .operations-footer {

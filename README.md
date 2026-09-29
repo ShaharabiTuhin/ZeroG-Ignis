@@ -47,7 +47,7 @@ Create `server/.env` with your Gemini key:
 
 ```env
 GEMINI_API_KEY=your_api_key_here
-PORT=5000
+PORT=5001
 ```
 
 Then run:
@@ -58,7 +58,7 @@ npm install
 npm run dev
 ```
 
-The API runs at `http://localhost:5000`.
+The API runs at `http://localhost:5001`.
 
 ## API
 
@@ -72,4 +72,5 @@ The API runs at `http://localhost:5000`.
 ```
 
 Keep API keys in `server/.env`; never commit them to GitHub.
+
 # ZeroG-Ignis
