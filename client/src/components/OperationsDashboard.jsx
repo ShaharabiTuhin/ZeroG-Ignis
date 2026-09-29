@@ -457,7 +457,7 @@ export default function OperationsDashboard() {
           <article className="panel analyst-panel">
             <div className="panel-topline">
               <div>
-                <span className="panel-number">04 / GEMINI ANALYST</span>
+                <span className="panel-number">04 / AI Assistant</span>
                 <h3>Ask the evidence</h3>
               </div>
               <span className="ai-badge">AI</span>
@@ -487,7 +487,7 @@ export default function OperationsDashboard() {
         <footer className="operations-footer">
           <span>TEAM DUO / NASA SPACE APPS CHALLENGE 2026</span>
           <span>
-            Gazi Shaharabi Anwar Tuhin + Sonia Akter Bithi / Cumilla, Bangladesh
+            Gazi Shaharabi Anwar Tuhin & Sonia Akter Bithi / Cumilla, Bangladesh
           </span>
         </footer>
       </main>
