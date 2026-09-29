@@ -2,6 +2,8 @@
 
 ZeroG Ignis is an interactive, AI-powered 3D dashboard designed to enhance astronaut fire safety for the NASA Space Apps Challenge 2026, "Flame in Freefall."
 
+**Live demo:** https://zerog-ignis.vercel.app/
+
 ## Problem
 
 Decades of NASA microgravity combustion data are dense and difficult for astronauts to interpret quickly during an emergency or mission planning.
